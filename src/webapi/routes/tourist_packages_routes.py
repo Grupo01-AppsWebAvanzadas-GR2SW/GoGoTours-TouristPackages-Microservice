@@ -1,8 +1,7 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
-from src.application.tourist_packages.dtos.tourist_packages_request_dto import TouristPackagesRequestDto
 from src.application.tourist_packages.dtos.tourist_packages_response_dto import TouristPackagesResponseDto
 from src.application.tourist_packages.services.tourist_packages_service_async import TouristPackagesServiceAsync
 
@@ -23,6 +22,14 @@ async def get_tourist_packages(
     tourist_packages_service: TouristPackagesServiceAsync = Depends(TouristPackagesServiceAsync)
 ):
     return await tourist_packages_service.get_tourist_packages()
+
+
+@tourist_packages_router.get("/name/{name}", response_model=TouristPackagesResponseDto)
+async def get_tourist_package_by_name(
+    name: str,
+    tourist_packages_service: TouristPackagesServiceAsync = Depends(TouristPackagesServiceAsync)
+):
+    return await tourist_packages_service.get_tourist_package_by_name(name)
 
 
 @tourist_packages_router.get("/{id}", response_model=TouristPackagesResponseDto, responses={404: {}})
