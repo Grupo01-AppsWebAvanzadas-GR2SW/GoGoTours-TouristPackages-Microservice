@@ -25,6 +25,14 @@ async def get_tourist_packages(
     return await tourist_packages_service.get_tourist_packages()
 
 
+@tourist_packages_router.get("/name/{name}", response_model=TouristPackagesResponseDto)
+async def get_tourist_package_by_name(
+    name: str,
+    tourist_packages_service: TouristPackagesServiceAsync = Depends(TouristPackagesServiceAsync)
+):
+    return await tourist_packages_service.get_tourist_package_by_name(name)
+
+
 @tourist_packages_router.get("/{id}", response_model=TouristPackagesResponseDto, responses={404: {}})
 async def get_tourist_packages_by_id(
         id: str,
