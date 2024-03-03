@@ -1,11 +1,12 @@
 from typing import Dict, Any
 from src.domain.common.entities.base_entity import BaseEntity
+from datetime import datetime
 
 
 class TouristPackage(BaseEntity[str]):
 
     def __init__(self, name: str = '', description: str = '', destination_place: str = '', duration: int = 0,
-                 max_capacity: int = 0, cost: float = 0, start_date: str = '', end_date: str = '', entity_id: str = '',
+                 max_capacity: int = 0, cost: float = 0, start_date: datetime = '', end_date: datetime = '', entity_id: str = '',
                  image: str = '', admin_id: str = ''):
         super().__init__(entity_id)
         self._name = name
@@ -114,27 +115,23 @@ class TouristPackage(BaseEntity[str]):
         self._cost = value
 
     @property
-    def start_date(self) -> str:
+    def start_date(self) -> datetime:
         return self._start_date
 
     @start_date.setter
-    def start_date(self, value: str):
-        if not isinstance(value, str):
-            raise TypeError('start_date must be a string')
-        if len(value) < 1 or len(value) > 1024:
-            raise ValueError('start_date must be between 1 and 1024 characters')
+    def start_date(self, value: datetime):
+        if not isinstance(value, datetime):
+            raise TypeError('start_date must be a date')
         self._start_date = value
 
     @property
-    def end_date(self) -> str:
+    def end_date(self) -> datetime:
         return self._end_date
 
     @end_date.setter
-    def end_date(self, value: str):
-        if not isinstance(value, str):
-            raise TypeError('end_date must be a string')
-        if len(value) < 1 or len(value) > 1024:
-            raise ValueError('end_date must be between 1 and 1024 characters')
+    def end_date(self, value: datetime):
+        if not isinstance(value, datetime):
+            raise TypeError('end_date must be a date')
         self._end_date = value
 
     def merge_dict(self, source: Dict[str, Any]) -> None:

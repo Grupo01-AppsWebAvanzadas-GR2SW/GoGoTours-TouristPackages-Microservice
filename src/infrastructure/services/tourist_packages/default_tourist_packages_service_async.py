@@ -50,7 +50,10 @@ class DefaultTouristPackagesServiceAsync(TouristPackagesServiceAsync):
         )
 
     async def get_tourist_packages_by_id(self, id: str) -> TouristPackagesResponseDto:
-        package = await self._tourist_packages_repository_async.get_by_id_async(id)
+        package = await self._tourist_packages_repository_async.get_async(id)
+
+        if package is None:
+            return None
 
         return TouristPackagesResponseDto(
             id=package.id,
@@ -60,6 +63,7 @@ class DefaultTouristPackagesServiceAsync(TouristPackagesServiceAsync):
             duration=package.duration,
             max_capacity=package.max_capacity,
             cost=package.cost,
+            image=package.image,
             start_date=package.start_date,
             end_date=package.end_date,
             admin_id=package.admin_id
@@ -81,10 +85,10 @@ class DefaultTouristPackagesServiceAsync(TouristPackagesServiceAsync):
             )
         )
 
-    async def edit_package(self, name: str, updated_package: TouristPackagesRequestDto):
-        package = await self._tourist_packages_repository_async.get_by_name_async(name)
+    async def edit_package(self, id: str, updated_package: TouristPackagesRequestDto):
+        package = await self._tourist_packages_repository_async.get_async(id)
 
-        if package:
+        if package is not None:
             # Actualiza los campos del paquete con los valores proporcionados en updated_package
             package.name = updated_package.name
             package.description = updated_package.description
@@ -102,10 +106,10 @@ class DefaultTouristPackagesServiceAsync(TouristPackagesServiceAsync):
         else:
             return False
 
-    async def delete_package(self, package_delete: str):
-        package = await self._tourist_packages_repository_async.get_by_name_async(package_delete)
+    async def delete_package(self, id: str):
+        package = await self._tourist_packages_repository_async.get_async(id)
 
-        if package:
+        if package is not None:
             await self._tourist_packages_repository_async.delete_by_id_async(package.id)
             return True
         else:
