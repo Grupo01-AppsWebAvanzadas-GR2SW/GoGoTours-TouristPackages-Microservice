@@ -1,8 +1,7 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
-from src.application.tourist_packages.dtos.tourist_packages_request_dto import TouristPackagesRequestDto
 from src.application.tourist_packages.dtos.tourist_packages_response_dto import TouristPackagesResponseDto
 from src.application.tourist_packages.services.tourist_packages_service_async import TouristPackagesServiceAsync
 
