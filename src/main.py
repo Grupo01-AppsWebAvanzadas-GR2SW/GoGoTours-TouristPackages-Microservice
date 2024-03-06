@@ -18,7 +18,7 @@ from src.webapi.routes.tourist_packages_routes import tourist_packages_router
 
 
 load_dotenv("src/.env")
-initialize_firebase("config/firebase-credentials.json")
+initialize_firebase("/etc/secrets/firebase-credentials.json")
 app = FastAPI()
 app.dependency_overrides = {
     TouristPackagesServiceAsync: DefaultTouristPackagesServiceAsync,
