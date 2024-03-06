@@ -17,7 +17,7 @@ class GenericRepositoryAsync(ABC, Generic[T, ID]):
         pass
 
     @abstractmethod
-    async def add_async(self, item: T) -> None:
+    async def add_async(self, item: T) -> ID:
         pass
 
     @abstractmethod
