@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 
 from google.cloud.firestore import AsyncClient
@@ -10,9 +13,11 @@ from src.infrastructure.firebase.tourist_packages.repositories.firestore_tourist
     FirestoreTouristPackagesRepositoryAsync
 from src.infrastructure.services.tourist_packages.default_tourist_packages_service_async import \
     DefaultTouristPackagesServiceAsync
+from src.rabbitmq.connection import RabbitMQConnection
 from src.webapi.routes.tourist_packages_routes import tourist_packages_router
 
 
+load_dotenv("src/.env")
 initialize_firebase("config/firebase-credentials.json")
 app = FastAPI()
 app.dependency_overrides = {

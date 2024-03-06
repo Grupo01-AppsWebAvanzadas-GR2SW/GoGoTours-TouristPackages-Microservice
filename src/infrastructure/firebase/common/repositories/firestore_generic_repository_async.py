@@ -46,9 +46,10 @@ class FirestoreGenericRepositoryAsync(GenericRepositoryAsync, Generic[T, ID]):
         except Exception:
             return []
 
-    async def add_async(self, item: T) -> None:
+    async def add_async(self, item: T) -> ID:
         document_ref = self._firestore_client.collection(self._collection_name).document()
         await document_ref.set(item.to_dict())
+        return document_ref.id
 
     async def add_many_async(self, items: list[T]) -> None:
         batch = self._firestore_client.batch()

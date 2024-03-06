@@ -69,8 +69,8 @@ class DefaultTouristPackagesServiceAsync(TouristPackagesServiceAsync):
             admin_id=package.admin_id
         )
 
-    async def add_package(self, tourist_package: TouristPackagesRequestDto):
-        await self._tourist_packages_repository_async.add_async(
+    async def add_package(self, tourist_package: TouristPackagesRequestDto) -> str:
+        return await self._tourist_packages_repository_async.add_async(
             TouristPackage(
                 name=tourist_package.name,
                 description=tourist_package.description,

@@ -5,6 +5,7 @@ from fastapi_jwt import JwtAuthorizationCredentials
 
 from src.application.tourist_packages.dtos.tourist_packages_response_dto import TouristPackagesResponseDto
 from src.application.tourist_packages.services.tourist_packages_service_async import TouristPackagesServiceAsync
+from src.rabbitmq.connection import RabbitMQConnection, TOURIST_PACKAGE_QUEUE
 from src.webapi.access_security import access_security
 from src.webapi.decorators import admin_only_async
 
@@ -19,7 +20,13 @@ async def create_tourist_packages(
         credentials: JwtAuthorizationCredentials = Security(access_security)
 ) -> TouristPackagesResponseDto:
     tourist_package.admin_id = credentials.subject["user_id"]
-    await tourist_packages_service.add_package(tourist_package)
+    new_id = await tourist_packages_service.add_package(tourist_package)
+    tourist_package.id = new_id
+    RabbitMQConnection.instance().channel.basic_publish(
+        exchange='',
+        routing_key=TOURIST_PACKAGE_QUEUE,
+        body=f"CREATE::{new_id}"
+    )
     return tourist_package
 
 
@@ -74,4 +81,11 @@ async def delete_tourist_package(
         tourist_packages_service: TouristPackagesServiceAsync = Depends(TouristPackagesServiceAsync),
         credentials: JwtAuthorizationCredentials = Security(access_security)
 ) -> bool:
-    return await tourist_packages_service.delete_package(id)
+    result = await tourist_packages_service.delete_package(id)
+    if result:
+        RabbitMQConnection.instance().channel.basic_publish(
+            exchange='',
+            routing_key=TOURIST_PACKAGE_QUEUE,
+            body=f"DELETE::{id}"
+        )
+    return result
